@@ -17,12 +17,12 @@ CREATE (e:Event {
     causation_id: line.causation_id,
     aggregate_id: line.aggregate_id,
     topic: line.topic
-})
+});
 
 LOAD CSV WITH HEADERS FROM 'file:///commands.csv' AS line
-CREATE (c:Command {
+MERGE (c:Command {
     id: line.command_id
-})
+});
 
 LOAD CSV WITH HEADERS FROM 'file:///events.csv' AS line
 MATCH (e:Event {id: line.event_id })
