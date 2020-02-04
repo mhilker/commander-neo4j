@@ -1,5 +1,7 @@
 # Commander Neo4j
 
+![Neo4j Graph](resources/screenshot.png)
+
 ## Create constraints for import
 ```
 CREATE CONSTRAINT ON (e:Event) ASSERT e.id IS UNIQUE
@@ -39,6 +41,12 @@ MATCH (e1:Event {id: line.event_id })
 MATCH (e2:Event {id: line.causation_id })
 CREATE (e1)-[:CAUSED_BY]->(e2)
 RETURN e1, e2;
+```
+
+## Match data
+
+```
+MATCH (n) RETURN n LIMIT 25
 ```
 
 ## Delete everything 
