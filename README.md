@@ -6,6 +6,7 @@
 ```
 CREATE CONSTRAINT ON (e:Event) ASSERT e.id IS UNIQUE
 CREATE CONSTRAINT ON (c:Command) ASSERT c.id IS UNIQUE
+CREATE CONSTRAINT ON (a:Aggregate) ASSERT a.id IS UNIQUE
 ```
 
 ## Import events
@@ -17,6 +18,11 @@ CREATE (e:Event {
     causation_id: line.causation_id,
     aggregate_id: line.aggregate_id,
     topic: line.topic
+});
+
+LOAD CSV WITH HEADERS FROM 'file:///events.csv' AS line
+MERGE (a:Aggregate {
+    id: line.aggregate_id
 });
 
 LOAD CSV WITH HEADERS FROM 'file:///commands.csv' AS line
@@ -35,6 +41,12 @@ MATCH (e:Event {id: line.event_id })
 MATCH (c:Command {id: line.causation_id })
 CREATE (e)-[:CAUSED_BY]->(c)
 RETURN e, c;
+
+LOAD CSV WITH HEADERS FROM 'file:///events.csv' AS line
+MATCH (e:Event {id: line.event_id })
+MATCH (a:Aggregate {id: line.aggregate_id })
+CREATE (e)-[:BELONGS_TO]->(a)
+RETURN e, a;
 
 LOAD CSV WITH HEADERS FROM 'file:///events.csv' AS line
 MATCH (e1:Event {id: line.event_id })
